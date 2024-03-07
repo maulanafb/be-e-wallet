@@ -10,13 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('wallet', function (Blueprint $table) {
+        Schema::create('transaction_types', function (Blueprint $table) {
             $table->id();
-            $table->float("balance", 10, 2);
-            $table->string("pin")->nullable();
+            $table->string("name");
+            $table->string("code");
+            $table->enum("action", ['cr', 'dr']);
+            $table->string("thumbnail")->nullable();
 
-            $table->foreignId('user_id')->constrained("users");
-            $table->string("card_number")->unique();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('wallet');
+        Schema::dropIfExists('transaction_types');
     }
 };
