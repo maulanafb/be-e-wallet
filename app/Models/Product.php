@@ -4,16 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Tip extends Model
+class Product extends Model
 {
-    use HasFactory, SoftDeletes;
-
+    use HasFactory;
     protected $fillable = [
-        'title',
+        'name',
         'thumbnail',
-        'url',
-
+        'price',
+        'description',
+        'status',
     ];
 }
