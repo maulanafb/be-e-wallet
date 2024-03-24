@@ -14,3 +14,8 @@ function getUser($param)
     $user->pin = $wallet->pin;
     return $user;
 }
+
+function pinChecker($pin)
+{
+    $userId = auth()->user()->id;
+}
