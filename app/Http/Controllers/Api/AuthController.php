@@ -75,7 +75,6 @@ class AuthController extends Controller
         } catch (\Throwable $th) {
             DB::rollback();
             return response()->json(['error' => $th->getMessage()], 500);
-            // return response()->json(['error' => 'Registration failed'], 500);
         }
     }
     public function login(Request $request)
