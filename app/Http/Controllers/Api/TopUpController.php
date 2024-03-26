@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\PaymentMethod;
+use App\Models\Transaction;
 use App\Models\TransactionType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class TopUpController extends Controller
 {
@@ -29,8 +32,25 @@ class TopUpController extends Controller
                 'message' => 'invalid PIN'
             ]);
         }
-
         $transactionType = TransactionType::where('code', 'top_up')->first();
         $paymentMethod = PaymentMethod::where('code', $request->payment_method_code)->first();
+
+        DB::beginTransaction();
+        try {
+            $transaction = Transaction::create([
+                'user_id' => auth()->user()->id,
+                'payment_method_id' => $paymentMethod->id,
+                'transaction_type_id' => $transactionType->id,
+                'amount' => $request->amount,
+                'transaction_code' => strtoupper(Str::random(10)),
+                'description' => 'top up via' . $paymentMethod->name,
+                'status' => 'pending'
+            ]);
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
     }
 }
